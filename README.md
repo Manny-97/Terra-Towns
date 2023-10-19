@@ -143,3 +143,32 @@ If it is successfull, it should return a json payload that looks like this:
 }
 ```
 We'll need to generate AWS CLI credits from IAM User in order to the user AWS CLI.
+
+## Terraform Basics
+
+### Terraform registry
+Terraform sources their provider and modules from the terraform registry which is located at [registry.terraform.io](https://registry.terraform.io/)
+- **Providers** is an interface to APIs that will allow you to create resources in terraform 
+- **Modules** are a way to refactor or make a large amount of terraform code modular, portable and shareble.
+[Random Terraform Provider](https://registry.terraform.io/providers/hashicorp/random)
+
+### Terraform console
+We can see all the list of all the Terraform command by simply typing `terraform`
+#### Terraform Init
+This initializes the resource backend. At the start of a project we use `terraform init` to download the binaries for the terraform providers that we will use for the project
+#### Terraform Plan
+`terraform plan`
+This will generate out a changeset about the state of our infrastructure and what will be changed. 
+We can output this changeset i.e. "plan" to be passed as an apply, but often you can just ignore outputting.
+#### Terraform Apply
+`terraform appky`
+This will run a plan and pass the changeset to be executed by terraform. Apply should prompt us "yes or no". If we want to accept yes without this procedure we can do so by using this command `terraform apply --auto-approve`
+
+### Terraform Lock Files
+`.terraform.lock.hcl` contains the locked versioning for the modules that should be used for this project. This file should be committed to your version control system.
+### Terraform State Files
+`terraform.tfstate` contains information about the current state of your infrastructure.
+This file should not be committed to your version control system, it contains sensitive data. If you loose the file, you loose the state of your infrastructure.
+`terraform.tfstate.backup` is the previous state of the file
+### Terraform Directory
+`.terraform` directory contains binaries of terraform providers
