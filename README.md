@@ -163,12 +163,16 @@ We can output this changeset i.e. "plan" to be passed as an apply, but often you
 #### Terraform Apply
 `terraform appky`
 This will run a plan and pass the changeset to be executed by terraform. Apply should prompt us "yes or no". If we want to accept yes without this procedure we can do so by using this command `terraform apply --auto-approve`
+#### Terraform Destroy
+`terraform destroy`
+This will destroy resources.
+To skip the prompt step, you can use this `terraform destroy --auto-approve`
 
-### Terraform Lock Files
+#### Terraform Lock Files
 `.terraform.lock.hcl` contains the locked versioning for the modules that should be used for this project. This file should be committed to your version control system.
-### Terraform State Files
+#### Terraform State Files
 `terraform.tfstate` contains information about the current state of your infrastructure.
 This file should not be committed to your version control system, it contains sensitive data. If you loose the file, you loose the state of your infrastructure.
 `terraform.tfstate.backup` is the previous state of the file
-### Terraform Directory
+#### Terraform Directory
 `.terraform` directory contains binaries of terraform providers
