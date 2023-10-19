@@ -176,3 +176,30 @@ This file should not be committed to your version control system, it contains se
 `terraform.tfstate.backup` is the previous state of the file
 #### Terraform Directory
 `.terraform` directory contains binaries of terraform providers
+
+### Terraform Cloud
+
+#### Issues With Gitpod Browser
+When attempting to login to your terraform cloud account using `terraform login`, you will be unable to paste the token on the terminal. 
+The workaround is to manually create the token:
+```
+https://app.terraform.io/app/settings/tokens?source=terraform-login
+```
+Then create the file manually here:
+```
+touch /home/gitpod/.terraform.d/credentials.tfrc.json
+```
+Then open the file using this command:
+```
+open /home/gitpod/.terraform.d/credentials.tfrc.json
+```
+Paste the following into the .json file:
+```
+{
+  "credentials": {
+    "app.terraform.io": {
+      "token": "YOUR-TERRAFORM-CLOUD-TOKEN"
+    }
+  }
+}
+```
