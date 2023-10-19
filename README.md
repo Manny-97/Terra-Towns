@@ -124,3 +124,22 @@ New terminal window are not aware of already set env vars
 #### Persisting Environment Variables in Gitpod
 
 We can persist env vars in gitpod by storing them in Gitpod Secret Storage.
+
+## AWS CLI Installation
+
+AWS CLI is installed for the project via the bash script [./bin/install_aws_cli](./bin/install_aws_cli)
+
+[Getting Started Install (AWS CLI) AWS CLI Env Vars](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+We can check if our AWS credentials is configured correctly by running the following AWS CLI command:
+```sh
+aws sts get-caller-identity
+```
+If it is successfull, it should return a json payload that looks like this:
+```json
+{
+    "UserId": "ABCDEFGHIJKLMNO131UA5",
+    "Account": "123456789124",
+    "Arn": "arn:aws:iam::123456789124:user/terraform-bootcamp-beginner"
+}
+```
+We'll need to generate AWS CLI credits from IAM User in order to the user AWS CLI.
