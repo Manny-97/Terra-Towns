@@ -6,3 +6,7 @@ output "bucket_name" {
 output "s3_website_endpoint" {
     value = module.terrahouse_aws.website_endpoint
 }
+
+output "cdn_domain" {
+  value = module.terrahouse_aws.website_domain
+}
