@@ -3,14 +3,38 @@ require 'json'
 require 'pry'
 require 'active_model'
 
+# We will emulate a mock database for dev
+# by setting a global variable. Don't do
+# this in prod
 $home = {}
 
+# This is a ruby class that include validation of records
+# This will represent our home resource as a ruby object
 class Home
+  # ActiveModels is part of ruby on rails.
+  # It is used as an ORM. Iy has a Module within
+  # ActiveModel that provides validation.
+  # The prod Terratowns server is rails and uses
+  # very similar and in most cases identical validations
+  # https://guides.rubyonrails.org/active_model_basics.html
+  # https://guides.rubyonrails.org/active_record_validations.html
   include ActiveModel::Validations
+
+  # create some virtual attributes to be stored on this object
+  # This will set a getter and a setter
+  # e.g.
+  # home = new Home()
+  # home.town = 'hello' # setter
+  # home.town() # getter
   attr_accessor :town, :name, :description, :domain_name, :content_version
 
-  # cooker-cove
-  validates :town, presence: true, inclusion: { in: %w[
+  # 'cooker-cove',
+  #   'missingo',
+  #   'gamers-grotto',
+  #   'the-nomad-pad',
+  #   'melomaniac-mansion',
+  #   'video-valley'
+  validates :town, presence: true, inclusion: { in: [
     'cooker-cove',
     'missingo',
     'gamers-grotto',
@@ -196,7 +220,7 @@ class TerraTownsMockServer < Sinatra::Base
       error 404, "failed to find home with provided uuid and bearer token"
     end
     # delete from mock database
-    uuid = $home['uuid']
+    uuid = $home[:uuid]
     $home = {}
     { uuid: uuid }.to_json
   end
