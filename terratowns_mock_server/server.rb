@@ -9,16 +9,31 @@ class Home
   include ActiveModel::Validations
   attr_accessor :town, :name, :description, :domain_name, :content_version
 
-  validates :town, presence: true
+  # cooker-cove
+  validates :town, presence: true, inclusion: { in: %w[
+    'cooker-cove',
+    'missingo',
+    'gamers-grotto',
+    'the-nomad-pad',
+    'melomaniac-mansion',
+    'video-valley'
+  ] }
+  # this is visible to all users
   validates :name, presence: true
+  # this is visible to all users
   validates :description, presence: true
+  # We want to lock this down to only be from cloudfront
   validates :domain_name, 
     format: { with: /\.cloudfront\.net\z/, message: "domain must be from .cloudfront.net" }
     # uniqueness: true, 
 
+  # content version has to be an integer 
+  # and ensure it is an increamental version in the controller
   validates :content_version, numericality: { only_integer: true }
 end
 
+# We are extending a class from Sinatra::Base to turn this generic
+# class to utilize sinatra web-framwork
 class TerraTownsMockServer < Sinatra::Base
 
   def error code, message
@@ -49,11 +64,13 @@ class TerraTownsMockServer < Sinatra::Base
 
   def find_user_by_bearer_token
     auth_header = request.env["HTTP_AUTHORIZATION"]
+    # Check if Authorization exists
     if auth_header.nil? || !auth_header.start_with?("Bearer ")
       error 401, "a1000 Failed to authenicate, bearer token invalid and/or teacherseat_user_uuid invalid"
     end
 
     code = auth_header.split("Bearer ")[1]
+    # Does the token matches the one in our db is blank/missing then throw error
     if code != x_access_code
       error 401, "a1001 Failed to authenicate, bearer token invalid and/or teacherseat_user_uuid invalid"
     end
@@ -148,7 +165,6 @@ class TerraTownsMockServer < Sinatra::Base
     # Validate payload data
     name = payload["name"]
     description = payload["description"]
-    domain_name = payload["domain_name"]
     content_version = payload["content_version"]
 
     unless params[:uuid] == $home[:uuid]
@@ -157,9 +173,9 @@ class TerraTownsMockServer < Sinatra::Base
 
     home = Home.new
     home.town = $home[:town]
+    home.domain_name = $home[:domain_name]
     home.name = name
     home.description = description
-    home.domain_name = domain_name
     home.content_version = content_version
 
     unless home.valid?
@@ -179,10 +195,12 @@ class TerraTownsMockServer < Sinatra::Base
     if params[:uuid] != $home[:uuid]
       error 404, "failed to find home with provided uuid and bearer token"
     end
-
+    # delete from mock database
+    uuid = $home['uuid']
     $home = {}
-    { message: "House deleted successfully" }.to_json
+    { uuid: uuid }.to_json
   end
 end
 
+# This is what will run the server
 TerraTownsMockServer.run!
